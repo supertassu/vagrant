@@ -22,3 +22,5 @@ The config directory contains the config.local.inc.php file that ACC uses and th
 If you need the MySQL login details, the username is "root" and the password is "vagrant". This is a virtual machine that is only intended for development purposes so security isn't particularly important here.
 
 There is a phpinfo() file at http://127.0.0.1:8080/info.php.
+
+cleanup.sh is a small shell script that destroys the Vagrant environment, deletes the logs directory, and deletes the html/waca directory.

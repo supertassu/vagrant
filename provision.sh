@@ -28,7 +28,7 @@ apt-get install -y git
 
 # Get ACC files from Git
 if [[ ! -e /vagrant/html/waca ]]; then
-	git clone https://github.com/FunPika/waca /vagrant/html/waca
+	git clone https://github.com/enwikipedia-acc/waca /vagrant/html/waca
 	ln -fs ../../config/config.local.inc.php /vagrant/html/waca/config.local.inc.php
 fi
 cd /vagrant/html/waca

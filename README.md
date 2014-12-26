@@ -15,6 +15,8 @@ Vagrant environment for ACC
 # Documentation
 Once "vagrant up" finishes running, you can open up http://127.0.0.1:8080/waca/acc.php and log in using "Admin" and "vagrant" as the username and password. This account should have Tool Administrator and CheckUser set on it.
 
+In addition, there are "AdminNoCU", "CheckUser", "User", and "New" users with the same password.
+
 If you want to run commands on the virtual machine that Vagrant creates (such as "sudo apt-get update; sudo apt-get upgrade"), you can run "vagrant ssh" while in this directory. 
 
 The config directory contains the config.local.inc.php file that ACC uses and the VirtualHost file that Apache uses.

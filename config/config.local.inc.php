@@ -5,7 +5,8 @@ $toolserver_host = "localhost";
 $toolserver_database = "acc";
 
 $dontUseWikiDb = 1;
-$useOauthSignup = 0;
+$useOauthSignup = false;
+$enforceOAuth = false;
 
 $baseurl = "http://127.0.0.1:8080/waca";
 $filepath = "/vagrant/html/waca/";
@@ -16,3 +17,5 @@ $onRegistrationNewbieCheck = false;
 $forceIdentification = false;
 
 $enableSQLError = 1;
+
+$ircBotNotificationsEnabled = 0;

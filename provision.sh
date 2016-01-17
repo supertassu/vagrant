@@ -44,20 +44,13 @@ cd /vagrant/html/waca
 git submodule update --init
 
 # Create database, populate message/template tables, apply patches, and create admin user
+# Note that database creation will only be done if no database named `acc` exists - if you wish to recreate the database
+# by rerunning this provisioner, please first drop the acc database.
 export MYSQL_PWD='vagrant'
 if ! mysql -e 'USE acc;'; then
 	echo "You can safely ignore the above database error."
 	cd /vagrant/html/waca/sql
-	mysql -e "CREATE DATABASE acc;"
-	mysql acc < db-structure.sql
-	for p in patches/*.sql; do
-		if [[ -e $p ]]; then
-			mysql acc < $p
-		fi
-	done
-	mysql acc < seed/emailtemplate_data.sql
-	mysql acc < seed/interfacemessage_data.sql
-	mysql acc < seed/welcometemplate_data.sql
+	./test_db.sh 1 localhost acc root vagrant
 	mysql acc < /vagrant/data.sql
 fi
 echo "Provisioning complete!"

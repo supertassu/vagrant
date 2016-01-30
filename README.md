@@ -13,7 +13,7 @@ Vagrant environment for ACC
 
 
 # Documentation
-Once "vagrant up" finishes running, you can open up http://127.0.0.1:8080/waca/acc.php and log in using "Admin" and "vagrant" as the username and password. This account should have Tool Administrator and CheckUser set on it.
+Once "vagrant up" finishes running, you can open up http://127.0.0.1:8081/waca/acc.php and log in using "Admin" and "vagrant" as the username and password. This account should have Tool Administrator and CheckUser set on it.
 
 In addition, there are "AdminNoCU", "CheckUser", "User", and "New" users with the same password.
 
@@ -23,6 +23,6 @@ The config directory contains the config.local.inc.php file that ACC uses and th
 
 If you need the MySQL login details, the username is "root" and the password is "vagrant". This is a virtual machine that is only intended for development purposes so security isn't particularly important here.
 
-There is a phpinfo() file at http://127.0.0.1:8080/info.php.
+There is a phpinfo() file at http://127.0.0.1:8081/info.php.
 
-cleanup.sh is a small shell script that destroys the Vagrant environment, deletes the logs directory, and deletes the html/waca directory.
+cleanup.sh/cleanup.bat is a small shell script that destroys the Vagrant environment, deletes the logs directory, and deletes the html/waca directory.

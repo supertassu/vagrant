@@ -2,3 +2,4 @@
 /logs
 /html/waca
 .idea/
+/config/config.local.inc.php

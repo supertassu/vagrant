@@ -13,4 +13,4 @@ INSERT INTO user (username, email, password, status, onwikiname, checkuser, emai
 INSERT INTO user (username, email, password, status, onwikiname, checkuser, emailsig) VALUES ('New',
 'new@localhost', ':2:x:$2y$10$vuRsKxkp3OjO9e8EbSv9.uKk8RVvjSQluOKh6LlMizJ76v7nhw6OW', 'New', 'New', '0', '');
 
-UPDATE interfacemessage SET content = '<ul>\r\n<li>Remember that this is only a sandbox. <b>Do not</b> create any accounts here.</li>\r\n<li>Testing woo!</li>\r\n</ul>' WHERE id = 31;
+UPDATE interfacemessage SET content = '<ul>\r\n<li>Remember that this is only a sandbox. <b>Do not</b> create any accounts here.</li>\r\n<li>Testing woo!</li>\r\n<li><a href="http://127.0.0.1:8081/info.php">PHP info</a></li>\r\n</ul>' WHERE id = 31;

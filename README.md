@@ -9,7 +9,7 @@ Vagrant environment for ACC
 2. Install [Vagrant] (https://www.vagrantup.com/downloads.html)
 3. Install [Git] (https://git-scm.com/)
 4. [Clone] (https://help.github.com/articles/cloning-a-repository/) this repository.
-5. Get submodules with "git submodule init --update --recursive"
+5. Get submodules with "git submodule update --init --recursive"
 6. Run "vagrant up" in a shell prompt
 
 

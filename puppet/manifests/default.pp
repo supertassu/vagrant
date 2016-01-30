@@ -13,7 +13,8 @@ package { 'htop':
 
 package { 'git':
 	require => Exec['apt-update'],
-	ensure 
+	ensure => installed,
+}
 	
 package { 'unattended-upgrades':
 	require => Exec['apt-update'],

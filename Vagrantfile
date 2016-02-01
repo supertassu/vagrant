@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	config.vm.network "forwarded_port", guest: 80, host: 8081
 	
 	# If true, then any SSH connections made will enable agent forwarding.
- 	# Default value: false
+	# Default value: false
 	# config.ssh.forward_agent = true
 
 	config.vm.provision "puppet" do |puppet|
@@ -31,5 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		puppet.environment = "testenv"
 	end
 	
+	config.vm.provision "shell", inline: "/usr/sbin/service apache2 restart", run: "always"
+
 	config.vm.hostname = "acc-vagrant"
 end

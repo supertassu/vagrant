@@ -25,6 +25,8 @@ class { 'apache':
 	require => Exec['apt-update'],
 	default_vhost => false,
 	mpm_module => 'prefork',
+	user => 'vagrant',
+	group => 'vagrant',
 }
 
 class { 'apache::mod::rewrite': }

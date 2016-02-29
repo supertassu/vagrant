@@ -80,6 +80,11 @@ file { "/home/vagrant/.my.cnf":
 	owner => 'vagrant',
 }
 
+package { 'phpunit':
+	require => Exec['apt-update'],
+	ensure => installed,
+}
+
 vcsrepo { '/vagrant/html/waca':
 	require => Package['git'],
 	ensure => present,

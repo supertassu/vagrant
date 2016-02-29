@@ -67,6 +67,8 @@ php::module { "xdebug": } php::mod { "xdebug": }
 $mods = ["mysql", "curl", "mcrypt", "xdebug"]
 php::mod { "$mods": }
 
+php::pecl::module { "runkit": }
+
 class { '::mysql::server':
 	require => Exec['apt-update'],
 	root_password => 'vagrant',

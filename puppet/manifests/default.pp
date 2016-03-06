@@ -49,6 +49,7 @@ apache::vhost { 'acc':
 		track_errors => 'on',
 		'xdebug.remote_enable' => 'on',
 		'xdebug.remote_connect_back' => 'on',
+		'runkit.internal_override' => 'on',
 	},
 	php_values => { 'xdebug.max_nesting_level' => '200', },
 	logroot => '/vagrant/logs',
@@ -67,7 +68,9 @@ php::module { "xdebug": } php::mod { "xdebug": }
 $mods = ["mysql", "curl", "mcrypt", "xdebug"]
 php::mod { "$mods": }
 
-php::pecl::module { "runkit": }
+php::pecl::module { "runkit":
+	use_package => 'no',
+}
 
 class { '::mysql::server':
 	require => Exec['apt-update'],

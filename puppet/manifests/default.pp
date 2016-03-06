@@ -49,7 +49,6 @@ apache::vhost { 'acc':
 		track_errors => 'on',
 		'xdebug.remote_enable' => 'on',
 		'xdebug.remote_connect_back' => 'on',
-		'runkit.internal_override' => 'on',
 	},
 	php_values => { 'xdebug.max_nesting_level' => '200', },
 	logroot => '/vagrant/logs',
@@ -60,6 +59,21 @@ class { 'php':
 	require => Exec['apt-update'],
 }
 
+php::pecl::module { "runkit":
+	use_package => 'no',
+}
+
+php::conf { 'enable-runkit':
+	require => Php::Pecl::Module["runkit"],
+	path => "/etc/php5/mods-available/runkit.ini",
+	content => "extension=runkit.so\nrunkit.internal_override = 1",
+	ensure => present,
+}
+
+php::mod { "runkit":
+	require => Php::Conf['enable-runkit'],
+}
+
 php::module { "mysql": } php::mod { "mysql": }
 php::module { "curl": } php::mod { "curl": }
 php::module { "mcrypt": } php::mod { "mcrypt": }
@@ -67,10 +81,6 @@ php::module { "xdebug": } php::mod { "xdebug": }
 
 $mods = ["mysql", "curl", "mcrypt", "xdebug"]
 php::mod { "$mods": }
-
-php::pecl::module { "runkit":
-	use_package => 'no',
-}
 
 class { '::mysql::server':
 	require => Exec['apt-update'],

@@ -1,3 +1,6 @@
+[submodule "puppet/modules/apt"]
+	path = puppet/modules/apt
+	url = https://github.com/puppetlabs/puppetlabs-apt.git
 [submodule "puppet/modules/apache"]
 	path = puppet/modules/apache
 	url = https://github.com/puppetlabs/puppetlabs-apache.git
@@ -10,9 +13,6 @@
 [submodule "puppet/modules/php"]
 	path = puppet/modules/php
 	url = https://github.com/example42/puppet-php.git
-[submodule "puppet/modules/puppi"]
-	path = puppet/modules/puppi
-	url = https://github.com/example42/puppi.git
 [submodule "puppet/modules/staging"]
 	path = puppet/modules/staging
 	url = https://github.com/nanliu/puppet-staging.git
@@ -22,3 +22,9 @@
 [submodule "puppet/modules/vcsrepo"]
 	path = puppet/modules/vcsrepo
 	url = https://github.com/puppetlabs/puppetlabs-vcsrepo.git
+[submodule "puppet/modules/translate"]
+	path = puppet/modules/translate
+	url = https://github.com/puppetlabs/puppetlabs-translate.git
+[submodule "puppet/modules/resource_api"]
+	path = puppet/modules/resource_api
+	url = https://github.com/puppetlabs/puppetlabs-resource_api.git

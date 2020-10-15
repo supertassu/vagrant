@@ -1,132 +1,90 @@
-exec { 'apt-update':
-	command => '/usr/bin/apt-get update',
+class { 'apt':
+  update => {
+	frequency => 'always',
+  },
 }
 
-exec { 'apt-autoremove':
-	command => '/usr/bin/apt-get autoremove -y',
-}
-
-package { 'htop':
-	require => Exec['apt-update'],
-	ensure => installed,
-}
-
-package { 'git':
-	require => Exec['apt-update'],
-	ensure => installed,
-}
-	
-package { 'unattended-upgrades':
-	require => Exec['apt-update'],
-	ensure => installed,
+file { '/vagrant/html':
+	ensure => directory,
 }
 
 class { 'apache':
-	require => Exec['apt-update'],
-	default_vhost => false,
-	mpm_module => 'prefork',
-	user => 'vagrant',
-	group => 'vagrant',
+  default_vhost => false,
+  mpm_module    => 'prefork', # needed for mod_php
+}
+
+apache::vhost { 'acc':
+	vhost_name    => '*',
+	port          => '80',
+	docroot       => '/vagrant/html',
+	docroot_owner => 'www-data',
+	docroot_group => 'www-data',
+	override      => ['All'],
 }
 
 class { 'apache::mod::rewrite': }
 class { 'apache::mod::php': }
 
-apache::vhost { 'acc': 
-	port => '80',
-	docroot => '/vagrant/html',
-	serveradmin => 'vagrant@localhost',
-	directories => [
-	{	path => '/vagrant/html',
-		options => ['Indexes','FollowSymLinks'],
-		rewrites => [ { rewrite_rule => ['^$ /waca [L]'], } ],
-	},],
-	php_flags => { 
-		display_errors => 'on', 
-		display_startup_errors => 'on',
-		html_errors => 'on',
-		log_errors => 'on',
-		track_errors => 'on',
-		'xdebug.remote_enable' => 'on',
-		'xdebug.remote_connect_back' => 'on',
-	},
-	php_values => { 'xdebug.max_nesting_level' => '200', },
-	logroot => '/vagrant/logs',
-	ip_based => true,
-}
+package { ['php-mysql', 'php-curl']: }
 
-class { 'php': 
-	require => Exec['apt-update'],
-}
-
-php::pecl::module { "runkit":
-	use_package => 'no',
-}
-
-php::conf { 'enable-runkit':
-	require => Php::Pecl::Module["runkit"],
-	path => "/etc/php5/mods-available/runkit.ini",
-	content => "extension=runkit.so\nrunkit.internal_override = 1",
-	ensure => present,
-}
-
-php::mod { "runkit":
-	require => Php::Conf['enable-runkit'],
-}
-
-php::module { "mysql": } php::mod { "mysql": }
-php::module { "curl": } php::mod { "curl": }
-php::module { "mcrypt": } php::mod { "mcrypt": }
-php::module { "xdebug": } php::mod { "xdebug": }
-
-$mods = ["mysql", "curl", "mcrypt", "xdebug"]
-php::mod { "$mods": }
-
-class { '::mysql::server':
-	require => Exec['apt-update'],
-	root_password => 'vagrant',
-	remove_default_accounts => true,
-}
-
-file { "/home/vagrant/.my.cnf":
-	require => Class['::mysql::server'],
-	ensure => present,
-	source => '/root/.my.cnf',
-	owner => 'vagrant',
-}
-
-package { 'phpunit':
-	require => Exec['apt-update'],
-	ensure => installed,
-}
+package { 'composer': }
 
 vcsrepo { '/vagrant/html/waca':
-	require => Package['git'],
-	ensure => present,
+	ensure   => present,
 	provider => git,
-	source => 'https://github.com/enwikipedia-acc/waca.git',
+	source   => 'https://github.com/enwikipedia-acc/waca.git',
+}
+
+exec { 'composer install':
+	require => Vcsrepo['/vagrant/html/waca'],
+	cwd     => '/vagrant/html/waca',
+	command => '/usr/bin/env bash -c "COMPOSER_HOME=/root/.composer composer install"', # run in bash for env variables
+	creates => '/vagrant/html/waca/vendor',
 }
 
 file { '/vagrant/html/waca/config.local.inc.php':
 	require => Vcsrepo['/vagrant/html/waca'],
-	ensure => present,
-	source => '/vagrant/config/.config.vagrant.inc.php',
+	ensure => link,
+	target => '/vagrant/config/.config.vagrant.inc.php',
 }
 
-file { '/vagrant/config/config.local.inc.php':
-	ensure => present,
+class { '::mysql::server':
+	create_root_my_cnf      => true,
+	root_password           => 'vagrant',
+	remove_default_accounts => true,
+	restart                 => true,
+	override_options        => {
+		'client' => {
+			pager  => 'less -inSFX',
+			prompt => '(\R:\m)\_\u@\h:[\d]>\_',
+		},
+	},
 }
 
-exec { 'createdb-1':
-	require => Class['::mysql::server'],
-	unless => '/usr/bin/mysql -pvagrant acc',
-	cwd => '/vagrant/html/waca/sql',
-	provider => 'shell',
-	command => './test_db.sh 1 localhost acc root vagrant',
-	notify => Exec['createdb-2'],
+mysql::db { 'acc':
+	user     => 'acc',
+	password => 'vagrant',
+	host     => 'localhost',
+	grant    => ['ALL'],
 }
 
-exec { 'createdb-2':
-	command => '/usr/bin/mysql -pvagrant acc < /vagrant/data.sql',
-	refreshonly => true,
+exec { 'sql-provision':
+	require => [
+		Exec['composer install'],
+		File['/vagrant/html/waca/config.local.inc.php'],
+		Mysql::Db['acc'],
+	],
+	cwd     => '/vagrant/html/waca',
+	command => '/vagrant/provision-db.sh',
+	creates => '/vagrant/html/waca/.sql-setup',
+
+}
+
+exec { 'generate-resources':
+	require => [
+		Exec['sql-provision'],
+	],
+	cwd     => '/vagrant/html/waca',
+	command => '/usr/bin/env php maintenance/RegenerateStylesheets.php',
+	creates => '/vagrant/html/waca/resources/generated',
 }

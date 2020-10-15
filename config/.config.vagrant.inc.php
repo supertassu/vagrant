@@ -3,25 +3,29 @@
 // This file should not be edited, it is simply copied to html/waca/config.local.inc.php,
 // edit config/config.local.inc.php instead.
 
-$toolserver_username = "root";
+$toolserver_username = "acc";
 $toolserver_password = "vagrant";
 $toolserver_host = "localhost";
 $toolserver_database = "acc";
 
+// Disconnect from IRC notifications and the wiki database.
+$ircBotNotificationsEnabled = 0;
 $dontUseWikiDb = 1;
-$useOauthSignup = false;
-$enforceOAuth = false;
 
 $baseurl = "http://127.0.0.1:8081/waca";
 $filepath = "/vagrant/html/waca/";
 $cookiepath = "/waca/";
 
+// these turn off features which you probably want off for ease of development.
 $enableEmailConfirm = 0;
-$onRegistrationNewbieCheck = false;
 $forceIdentification = false;
+$locationProviderClass = "FakeLocationProvider";
+$antispoofProviderClass = "FakeAntiSpoofProvider";
+$rdnsProviderClass = "FakeRDnsLookupProvider";
 
 $enableSQLError = 1;
 
-$ircBotNotificationsEnabled = 0;
+$useOauthSignup = false;
+$enforceOAuth = false;
 
 require_once('/vagrant/config/config.local.inc.php');
